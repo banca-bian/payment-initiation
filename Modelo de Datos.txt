@@ -1,0 +1,136 @@
+Tablas y campos para la persistencia de información:
+
+Tabla:
+public.customer_relationship;
+Campos:
+customer_id, customer_name, document_type, document_number, created_at
+
+Tabla:
+payment_instruction
+Campos:
+instruction_id, payment_transaction_id, direction_type, instruction_type, requested_mechanism, instruction_datetime, datetime_type, processing_validity_time, priority, clearing_channel, credit_debit_indicator, instruction_status, amount, amount_type, created_at
+
+tabla:
+payment_transaction
+Campos:
+payment_transaction_id, customer_id, payment_transaction_type, payer_reference, payer_bank_reference, payer_product_reference, payee_reference, payee_bank_reference, payee_product_reference, amount, currency, date_type, date_value, payment_mechanism, payment_purpose, status, created_at, updated_at
+
+Tabla:
+transaction
+Campos:
+transaction_id, step_id, technical_result, response_payload, created_at
+
+Tabla:
+transaction_step
+Campos:
+step_id, payment_transaction_id, step_type, step_result, step_status, created_at
+
+DETALLE DE CADA TABLA:
+
+1. Tabla: customer_relationship
+? Objetivo
+-Identificar al cliente que está iniciando el pago, manteniendo la referencia hacia la relación bancaria.
+
+? Propósito
+-Asociar cada Payment Transaction a un cliente.
+-Permitir obtener información del cliente sin depender del core bancario.
+-Servir como metadato para trazabilidad, auditoría y reporting.
+-Mantener relación Cliente ? Pagos iniciados.
+
+? Ejemplo práctico
+-Cuando un cliente realiza 20 pagos en un día, todos se relacionan a customer_id, permitiendo extraer comportamientos o riesgos (fraude, AML).
+
+? 2. Tabla: payment_transaction
+? La tabla más importante (CR – Control Record)
+? Objetivo
+Representar el PaymentInitiationTransaction, que es la transacción principal del dominio BIAN.
+
+? Propósito
+Actúa como contenedor de toda la orquestación del pago.
+Guarda toda la información core del pago:
+-pagador
+-beneficiario
+-monto
+-moneda
+-propósito
+-mecanismo (ACH, SWIFT, interno)
+-estado general del pago (INITIATED, PENDING, SENT, FAILED, COMPLETED)
+-Es el punto de referencia para todos los BQ (Compliance, FundingCheck, OrderInitiation).
+-Permite auditoría completa del pago.
+-Centraliza el tracking del pago.
+
+? Ejemplo práctico
+Si necesitas saber: "qué pasó con el pago #X", toda la información comienza aquí.
+
+? 3. Tabla: payment_instruction
+? Objetivo
+Registrar los datos detallados de la instrucción de pago que el cliente envía.
+
+? Propósito
+Registrar la instrucción según tu diagrama (Instruction Helper):
+fecha
+tipo de instrucción
+prioridad
+canal de compensación
+indicador de crédito/débito
+mecanismo solicitado
+Permitir gestionar modificaciones posteriores a la instrucción (UpCR – Update).
+Registrar atributos más operativos y técnicos que no pertenecen al CR.
+
+? Ejemplo práctico
+Un cliente puede enviar una instrucción con:
+prioridad alta
+mecanismo ACH
+fecha de ejecución mañana a las 9 AM
+Estos atributos van en payment_instruction, no en payment_transaction.
+
+? 4. Tabla: transaction_step
+? Representa los BQ de BIAN (subprocesos especializados)
+BIAN define BQ como “bloques de capacidades”. Aquí se registran:
+Compliance (AML, listas negras)
+FundingCheck (validación de fondos)
+OrderInitiation (orden de pago hacia ACH/SWIFT)
+
+? Objetivo
+Registrar cada subproceso ejecutado dentro del Payment Initiation.
+
+? Propósito
+Registrar el resultado del BQ:
+OK, FAILED, OBSERVED, INSUFFICIENT_FUNDS, SENT_TO_ACH, etc.
+Permitir tener varios steps por transacción.
+Asegurar trazabilidad de todas las operaciones obligatorias para un pago.
+Registrar quién lo ejecutó (sistema antifraude, core, motor de pagos).
+Facilitar auditorías ante cualquier incumplimiento regulatorio.
+
+? Ejemplo práctico
+Un pago ejecutado puede tener:
+COMPLIANCE: OK
+FUNDING_CHECK: OK
+ORDER_INITIATION: SENT_TO_CCE
+Si falla el FundingCheck, el proceso se detiene y el pago queda en estado FAILED.
+
+? 5. Tabla: transaction
+? Representa el artefacto de ejecución técnica
+Es opcional en muchos diseños, pero muy útil para auditoría y motores de pago modernos.
+
+? Objetivo
+Registrar el resultado técnico de la ejecución de un transaction_step.
+
+? Propósito
+Guardar el payload devuelto por sistemas externos:
+Respuesta ACH
+Respuesta SWIFT
+Respuesta del módulo AML
+Respuesta del Core bancario
+Mantener un historial técnico detallado.
+Servir como registro en caso de disputas o auditorías.
+Mantener la trazabilidad de IDs externos.
+
+? Ejemplo práctico
+Cuando envías un pago a la CCE, esta tabla guarda:
+{
+  "cce_message_id": "CCE12340098",
+  "status": "ACCEPTED",
+  "processing_time_ms": 85
+}
+Luego puedes consultar por external_ref para debugging.
