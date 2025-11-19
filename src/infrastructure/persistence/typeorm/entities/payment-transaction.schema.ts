@@ -33,20 +33,20 @@ export class PaymentTransactionSchema {
   payer_reference: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  payer_bank_reference: string;
+  payer_bank_reference: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  payer_product_reference: string;
+  payer_product_reference: string | null;
 
   // Payee information
   @Column({ type: 'varchar', length: 255 })
   payee_reference: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  payee_bank_reference: string;
+  payee_bank_reference: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  payee_product_reference: string;
+  payee_product_reference: string | null;
 
   // Transaction details
   @Column({ type: 'decimal', precision: 18, scale: 2 })
@@ -56,36 +56,36 @@ export class PaymentTransactionSchema {
   currency: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  date_type: string;
+  date_type: string | null;
 
   @Column({ type: 'timestamp', nullable: true })
-  date_value: Date;
+  date_value: Date | null;
 
   @Column({ type: 'varchar', length: 50 })
   payment_mechanism: string;
 
   @Column({ type: 'text', nullable: true })
-  payment_purpose: string;
+  payment_purpose: string | null;
 
   // Recurring payment support
   @Column({ type: 'text', nullable: true })
-  recurring_payment_record: string;
+  recurring_payment_record: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  recurring_payment_customer_reference: string;
+  recurring_payment_customer_reference: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  recurring_payment_reference: string;
+  recurring_payment_reference: string | null;
 
   // Additional fields
   @Column({ type: 'decimal', precision: 18, scale: 2, nullable: true })
-  payment_fees_charges: number;
+  payment_fees_charges: number | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  document_directory_entry_instance_reference: string;
+  document_directory_entry_instance_reference: string | null;
 
   @Column({ type: 'text', nullable: true })
-  document_content: string;
+  document_content: string | null;
 
   // Status
   @Column({ type: 'varchar', length: 50, default: 'INITIATED' })

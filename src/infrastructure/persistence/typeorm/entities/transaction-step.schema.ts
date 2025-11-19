@@ -26,34 +26,34 @@ export class TransactionStepSchema {
   step_type: string;
 
   @Column({ type: 'text', nullable: true })
-  step_result: string;
+  step_result: string | null;
 
   @Column({ type: 'varchar', length: 50, default: 'PENDING' })
   step_status: string;
 
   // Compliance-specific fields
   @Column({ type: 'varchar', length: 50, nullable: true })
-  compliance_check_type: string;
+  compliance_check_type: string | null;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  compliance_check_result: string;
+  compliance_check_result: string | null;
 
   @Column({ type: 'text', nullable: true })
-  compliance_task_result: string;
+  compliance_task_result: string | null;
 
   // FundingCheck-specific fields
   @Column({ type: 'varchar', length: 50, nullable: true })
-  funding_check_result: string;
+  funding_check_result: string | null;
 
   // OrderInitiation-specific fields
   @Column({ type: 'varchar', length: 255, nullable: true })
-  payment_order_procedure_instance_reference: string;
+  payment_order_procedure_instance_reference: string | null;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  payment_order_procedure_instance_status: string;
+  payment_order_procedure_instance_status: string | null;
 
   @Column({ type: 'text', nullable: true })
-  order_initiation_task_result: string;
+  order_initiation_task_result: string | null;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
