@@ -19,25 +19,25 @@ export class PaymentTransactionMapper {
     schema.customer_id = domain.customerId;
     schema.payment_transaction_type = domain.paymentTransactionType;
     schema.payer_reference = domain.payerReference;
-    schema.payer_bank_reference = domain.payerBankReference;
-    schema.payer_product_reference = domain.payerProductReference;
+    schema.payer_bank_reference = domain.payerBankReference || null;
+    schema.payer_product_reference = domain.payerProductReference || null;
     schema.payee_reference = domain.payeeReference;
-    schema.payee_bank_reference = domain.payeeBankReference;
-    schema.payee_product_reference = domain.payeeProductReference;
+    schema.payee_bank_reference = domain.payeeBankReference || null;
+    schema.payee_product_reference = domain.payeeProductReference || null;
     schema.amount = domain.amount;
     schema.currency = domain.currency;
-    schema.date_type = domain.dateType;
-    schema.date_value = domain.dateValue;
+    schema.date_type = domain.dateType || null;
+    schema.date_value = domain.dateValue || null;
     schema.payment_mechanism = domain.paymentMechanism;
-    schema.payment_purpose = domain.paymentPurpose;
-    schema.recurring_payment_record = domain.recurringPaymentRecord;
-    schema.recurring_payment_customer_reference = domain.recurringPaymentCustomerReference;
-    schema.recurring_payment_reference = domain.recurringPaymentReference;
+    schema.payment_purpose = domain.paymentPurpose || null;
+    schema.recurring_payment_record = domain.recurringPaymentRecord || null;
+    schema.recurring_payment_customer_reference = domain.recurringPaymentCustomerReference || null;
+    schema.recurring_payment_reference = domain.recurringPaymentReference || null;
     schema.status = domain.status;
-    schema.payment_fees_charges = domain.paymentFeesCharges;
+    schema.payment_fees_charges = domain.paymentFeesCharges || null;
     schema.document_directory_entry_instance_reference =
-      domain.documentDirectoryEntryInstanceReference;
-    schema.document_content = domain.documentContent;
+      domain.documentDirectoryEntryInstanceReference || null;
+    schema.document_content = domain.documentContent || null;
 
     if (domain.createdAt) {
       schema.created_at = domain.createdAt;

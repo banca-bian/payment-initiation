@@ -18,16 +18,16 @@ export class TransactionStepMapper {
 
     schema.payment_transaction_id = domain.paymentTransactionId;
     schema.step_type = domain.stepType;
-    schema.step_result = domain.stepResult;
+    schema.step_result = domain.stepResult || null;
     schema.step_status = domain.stepStatus;
-    schema.compliance_check_type = domain.complianceCheckType;
-    schema.compliance_check_result = domain.complianceCheckResult;
-    schema.compliance_task_result = domain.complianceTaskResult;
-    schema.funding_check_result = domain.fundingCheckResult;
+    schema.compliance_check_type = domain.complianceCheckType || null;
+    schema.compliance_check_result = domain.complianceCheckResult || null;
+    schema.compliance_task_result = domain.complianceTaskResult || null;
+    schema.funding_check_result = domain.fundingCheckResult || null;
     schema.payment_order_procedure_instance_reference =
-      domain.paymentOrderProcedureInstanceReference;
-    schema.payment_order_procedure_instance_status = domain.paymentOrderProcedureInstanceStatus;
-    schema.order_initiation_task_result = domain.orderInitiationTaskResult;
+      domain.paymentOrderProcedureInstanceReference || null;
+    schema.payment_order_procedure_instance_status = domain.paymentOrderProcedureInstanceStatus || null;
+    schema.order_initiation_task_result = domain.orderInitiationTaskResult || null;
 
     if (domain.createdAt) {
       schema.created_at = domain.createdAt;
